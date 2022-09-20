@@ -1,0 +1,28 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  torrserver:
+    image: ksey/torrserver
+    ports:
+      - "8090:8090"
+    environment:
+      - TZ=Europe/Moscow
+    volumes:
+      - /opt/mediaserver/torrserver/db:/TS/db
+    restart: unless-stopped
+    
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+      - AUTO_UPDATE=true #optional
+#      - RUN_OPTS=<run options here> #optional
+    volumes:
+      - /opt/mediaserver/jackett/config:/config
+      - /opt/mediaserver/jackett/downloads:/downloads
+      - /opt/mediaserver/jackett/definitions:/config/cardigann/definitions
+    ports:
+      - 9117:9117
+    restart: unless-stopped
